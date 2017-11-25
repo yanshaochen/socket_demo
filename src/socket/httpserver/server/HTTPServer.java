@@ -1,5 +1,6 @@
 package socket.httpserver.server;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -40,10 +41,12 @@ public class HTTPServer {
     private static void service(Socket socket) throws Exception {
         //获得读取HTTP请求的输入流
         InputStream socketIn=socket.getInputStream();
-        Thread.sleep(500);//等待HTTP请求
-        int size=socketIn.available();
-        byte[] buffer=new byte[size];
-        String request=new String(buffer);
+        //Thread.sleep(500);//等待HTTP请求
+        byte[] buffer=new byte[128];
+        int data;
+        StringBuilder request = new StringBuilder();
+        while ((data=socketIn.read(buffer))!=-1)
+            request.append(new String(buffer,0,data));
         System.out.println(request);//打印HTTP请求数据
 
         /*解析HTTP请求*/
@@ -69,7 +72,7 @@ public class HTTPServer {
         //HTTP向应头
         String responseHeader="Content-Type:"+contentType+"\r\n\r\n";
         //获得读取响应正文的输入流,和HTTPServer类同级别往下找
-        InputStream in = HTTPServer.class.getResourceAsStream("root/" + uri);
+        InputStream in = HTTPServer.class.getResourceAsStream(uri);
 
         /*发送HTTP响应结果*/
         OutputStream socketOut = socket.getOutputStream();
@@ -82,6 +85,7 @@ public class HTTPServer {
         buffer=new byte[128];
         while ((len=in.read(buffer))!=-1)
             socketOut.write(buffer,0,len);
+        socketOut.close();
         Thread.sleep(1000);//睡眠1s,等待客户接收HTTP响应结果
         socket.close();
     }

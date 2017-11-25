@@ -18,7 +18,7 @@ public class HTTPClient {
         Socket socket=null;
         try{
             socket=new Socket(host,post);
-        }catch (Exception e){
+        }catch (IOException e){
             e.printStackTrace();
         }
         try{
@@ -40,10 +40,12 @@ public class HTTPClient {
 
             /*接收响应结果*/
             InputStream socketIn=socket.getInputStream();//获得响应输入流
-            int size=socketIn.available();
-            byte[] buffer=new byte[size];
-            socketIn.read(buffer);
-            System.out.println(new String(buffer));//打印响应结果
+            byte[] buffer=new byte[128];
+            int data;
+            StringBuffer response=new StringBuffer();
+            while ((data=socketIn.read(buffer))!=-1)
+                response.append(new String(buffer,0,data));
+            System.out.println(response);//打印响应结果
         }catch (Exception e){
             e.printStackTrace();
         }finally {
