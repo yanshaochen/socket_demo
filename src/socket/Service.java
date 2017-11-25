@@ -8,13 +8,13 @@ import java.net.Socket;
 
 public class Service {
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(50000);
+        ServerSocket server = new ServerSocket(50001);
         //create listener..
+        System.out.println("listening..");
         Socket accept = server.accept();
         InputStream is = accept.getInputStream();
-        System.out.println("listening..");
         //save to local files
-        FileOutputStream fos = new FileOutputStream("C:\\Users\\yansh\\Downloads\\abc.png");
+        FileOutputStream fos = new FileOutputStream("C:\\Users\\yansh\\Downloads\\abc.txt");
         byte[] bytes=new byte[1024];
         int data;
         while ((data=is.read(bytes))!=-1){

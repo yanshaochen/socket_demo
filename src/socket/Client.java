@@ -7,6 +7,7 @@ import java.net.Socket;
 
 public class Client {
     public static void main(String[] args) throws IOException {
+        //the server's ip,port
         Socket client = new Socket("192.168.0.105",50000);
         //prepare os to send data to server
         OutputStream os = client.getOutputStream();
